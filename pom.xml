@@ -444,5 +444,5 @@
             <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/frohoff/ysoserial</url>
         </repository>
-    </distributionManagement>	
+    </distributionManagement>
 </project>
