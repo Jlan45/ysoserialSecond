@@ -15,6 +15,14 @@ A proof-of-concept tool for generating payloads that exploit unsafe Java object 
 
 家人们谁懂啊，居然没人做二次反序列化的，我先写三个payload为敬
 
+目前SecObjRMICon和SecObjROME可用，后续会添加C3P0
+
+参考来自
+
+http://tttang.com/archive/1701/
+
+[https://github.com/Y4tacker/JavaSec/blob/main/其他/Java二次反序列化/Java触发二次反序列化的点.md](https://github.com/Y4tacker/JavaSec/blob/main/其他/Java二次反序列化/Java触发二次反序列化的点.md)
+
 ## Disclaimer
 
 This software has been created purely for the purposes of academic research and
