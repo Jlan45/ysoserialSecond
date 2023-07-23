@@ -45,7 +45,9 @@ public class GeneratePayload {
 
 	private static void printUsage() {
 		System.err.println("Y SO SERIAL?");
-		System.err.println("Usage: java -jar ysoserial-[version]-all.jar [payload] '[command]'");
+        System.err.println("Add some payload by J1an");
+        System.err.println("Usage: java -jar ysoserial-[version]-all.jar [payload] '[command]'");
+		System.err.println("Usage: java -jar ysoserial-[version]-all.jar secobjxxx '原payload:command'");
 		System.err.println("  Available payload types:");
 
 		final List<Class<? extends ObjectPayload>> payloadClasses =
