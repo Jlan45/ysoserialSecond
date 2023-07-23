@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
 // TODO per-thread secmgr
 public class ExecCheckingSecurityManager extends SecurityManager {
 	public ExecCheckingSecurityManager() {
-		this(true);
+		this(false);
 	}
 
 	public ExecCheckingSecurityManager(boolean throwException) {

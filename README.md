@@ -27,6 +27,8 @@ this data, the chain will automatically be invoked and cause the command to be e
 It should be noted that the vulnerability lies in the application performing unsafe deserialization and NOT in having
 gadgets on the classpath.
 
+家人们谁懂啊，居然没人做二次反序列化的，我先写三个payload为敬
+
 ## Disclaimer
 
 This software has been created purely for the purposes of academic research and

