@@ -15,7 +15,7 @@ A proof-of-concept tool for generating payloads that exploit unsafe Java object 
 
 家人们谁懂啊，居然没人做二次反序列化的，我先写三个payload为敬
 
-目前SecObjRMICon和SecObjROME可用，后续会添加C3P0
+目前SecObjRMICon，SecObjBA和SecObjROME可用，后续会添加C3P0
 
 参考来自
 
