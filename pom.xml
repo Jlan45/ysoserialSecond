@@ -352,11 +352,11 @@
             <artifactId>jackson-annotations</artifactId>
             <version>${jackver}</version>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackver}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--            <artifactId>jackson-databind</artifactId>-->
+<!--            <version>${jackver}</version>-->
+<!--        </dependency>-->
 	</dependencies>
 
 	<profiles>
